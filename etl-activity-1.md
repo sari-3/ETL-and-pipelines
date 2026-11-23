@@ -1,61 +1,120 @@
 # ![Digital Futures Academy](https://github.com/digital-futures-academy/DataScienceMasterResources/blob/main/Resources/datascience-notebook-header.png?raw=true)
 
-## Activity 0: Question the Brief
+## Activity 1: Identify the User Stories
 
-**Time:** 12 minutes (7 in teams, 5 with the client)  
-**Work in:** teams of three to five
+**Time:** 20 minutes (15 in teams, 5 debrief)  
+**Work in:** teams of three to five  
+**You need:** the client's answers from Activity 0
 
-A consultant never builds straight from a brief. Every brief leaves gaps, and if you fill them with assumptions you may build the wrong dataset. Your job in this activity is to find those gaps before any user stories are written.
+### Instructions
+
+Turn the requirements below into user stories. The requirements fall into three **epics**: Extract, Transform and Load. Break each epic into one or more stories using this format:
+
+```text
+As a [role],
+I want [goal],
+so that [benefit].
+```
+
+Two rules:
+
+- **One role per story.** Name the person who gets the value: a Data Analyst, a Data Scientist or the Marketing Manager. Avoid combined roles such as "Data Analyst/Scientist".
+- **Keep the "so that".** It tells the team *why*, which is what lets them make sensible decisions when details are unclear.
 
 ---
 
-### The client brief
+### Key requirements
 
-> A client needs a robust ETL pipeline that integrates **transaction data from a SQL database** with **customer demographic data from a CSV file**. The data must be cleaned, standardised and enriched, keeping only **active customers who have spent over \$500**, so that the client can target high-value customers with relevant marketing and rewards. The business also wants insight into the **age and country** profile of these customers. The result must be stored in a **SQL table** that can be **reset or updated regularly**.
+**Data Analysts and Data Scientists need:**
 
-### The data
+- the transaction and customer data brought into the pipeline from both sources
+- assurance that the data is clean, consistent and accurate
+- a single dataset combining transaction and demographic data
+- the result stored in a SQL table for analysis
+- to be able to reset or update the data to repeat the analysis
 
-| Source | Format | Fields | Volume |
-|---|---|---|---|
-| `transactions` | SQL database table | `transaction_id`, `customer_id`, `transaction_date`, `amount` | 10,500 rows |
-| `customers.csv` | CSV file | `customer_id`, `name`, `age`, `country`, `is_active` | 5,200 rows |
+**The Marketing Manager (business stakeholder) needs:**
 
-Known data-quality problems: missing values, duplicates, inconsistent formats, invalid entries, and customers who appear in one source but not the other.
+- the **active** customers who have spent **more than $500**, so they can be targeted with rewards
+- each high-value customer's **age** and **country**, so analysts can report on trends
 
----
-
-### Your task
-
-1. **Write at least five questions** you would ask the client before building anything. Use the four categories below to make sure you cover the ground.
-2. **Label each question** as **F** (functional: *what* the pipeline does) or **NF** (non-functional: *how well* it does it, including privacy and security).
-3. **Star your top two:** the questions whose answers would most change what you build.
-
-Your trainer will then play the client. Each team asks its two starred questions in turn, skipping any that another team has already asked. You will get the full answer sheet afterwards.
-
-| Category | Prompts to get you started |
+| Epic | What it delivers |
 |---|---|
-| **Business rules** | What exactly does "spent over \$500" mean? What makes a customer "active"? |
-| **Data** | What counts as a duplicate? What should happen to bad or missing values? |
-| **Operations** | How often is "regularly"? Who runs the pipeline? What happens if it fails? |
-| **People and privacy** | Who will use the output? Does it need everything in the source, including names? |
+| Epic 1: Extract | Transaction and customer data brought into the pipeline from both sources |
+| Epic 2: Transform | Each source cleaned, then combined into a single enriched dataset. Cleaning is the first part of Transform. |
+| Epic 3: Load | The final dataset stored in a SQL table that can be safely reset or updated |
 
 ---
 
-### Your questions
+### User stories
 
-| # | Question | Category | F / NF | Top 2? |
-|---|---|---|---|---|
-| 1 | | | | |
-| 2 | | | | |
-| 3 | | | | |
-| 4 | | | | |
-| 5 | | | | |
+#### Epic 1: Extract
+
+> **Hint:** you have two data sources, and each needs its own extraction.
+
+```text
+As a Data Analyst,
+I want the transaction and customer data,
+so that I can analyse transaction pattern for each customer or compare with other customers
+```
+
+```text
+As a Data Analyst,
+I want an easily readable single dataset containing the combined transaction and demographic data,
+so that I can easily analyse the reults and be able to reset or update the data as needed.
+```
+
+```text
+As a Data Analyst,
+I want consistent and accurate data,
+so that I can accurately measure customer statistics
+```
+
+```text
+As a ,
+I want ,
+so that 
+```
+---
+
+#### Epic 2: Transform
+
+> **Hint:** clean each extracted source separately (two stories), then combine them (one story).  
+> **Think:** who gets the value from the combined, filtered dataset?
+
+```text
+As a Data Analyst,
+I want the final dataset stored in a SQL table that can be safely reset or updated,
+so that I can repeat the analysis on fresh data without creating duplicates.
+```
+
+```text
+As a Marketing Manager, 
+I want to identify active customers who have spent over $500 
+so that I can target them with relevant marketing campaigns and rewards.
+```
+
+```text
+As a ,
+I want ,
+so that 
+```
 
 ---
 
-### Debrief
+#### Epic 3: Load
 
-- Which of your questions would have caused the most rework if you had guessed the answer?
-- The brief includes names and ages. What does that mean for how you design and test the pipeline?
+```text
+As a ,
+I want ,
+so that 
+```
 
-Keep the client's answers: you will use them in Activities 1 to 4.
+> **Discuss:** Load has only one story. Is it really an epic? Write one sentence explaining your view.
+
+---
+
+### You should finish with
+
+- Six user stories across three epics, each with a single role
+- One sentence on whether Load is an epic, and why
