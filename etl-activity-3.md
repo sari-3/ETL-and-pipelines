@@ -21,12 +21,12 @@ Replace each `???` with the correct data source, stage or target. The asterisks 
 
 ```mermaid
 flowchart LR
-    S1[("Source 1: ???")] --> X["Extract"]
-    S2[/"Source 2: ???"/] --> X
-    X --> T1["Transform: ???*"]
-    T1 --> T2["Transform: ???**"]
-    T2 --> L["???***"]
-    L --> TGT[("Target: ???")]
+    S1[("Source 1: SQL DB")] --> X["Extract"]
+    S2[/"Source 2: CSV file"/] --> X
+    X --> T1["Transform: Clean*"]
+    T1 --> T2["Transform: Combine**"]
+    T2 --> L["Load***"]
+    L --> TGT[("Target: customer_summary")]
     TGT -.-> D(["Deploy and schedule: later session"])
 ```
 
@@ -40,10 +40,10 @@ Put the four cleaning steps in the right order. Think about which step must come
 
 ```mermaid
 flowchart LR
-    A["Transform: ???*"] --> B1[["???"]]
-    B1 --> B2[["???"]]
-    B2 --> B3[["???"]]
-    B3 --> B4[["???"]]
+    A["Transform: Clean*"] --> B1[["Standardise formats"]]
+    B1 --> B2[["Remove duplicates"]]
+    B2 --> B3[["handle missing values"]]
+    B3 --> B4[["handling invalid values"]]
     B4 --> B5[/"Cleaned data, with a log of rejected rows"/]
 ```
 
@@ -55,11 +55,11 @@ List the five steps that turn the two cleaned datasets into the `customer_summar
 
 ```mermaid
 flowchart LR
-    A["Transform: ???**"] --> B1[["???"]]
-    B1 --> B2[["???"]]
-    B2 --> B3[["???"]]
-    B3 --> B4[["???"]]
-    B4 --> B5[["???"]]
+    A["Transform: Combine**"] --> B1[["join on customer_id"]]
+    B1 --> B2[["filter active"]]
+    B2 --> B3[["aggregate total, avg, count"]]
+    B3 --> B4[["filter > 500"]]
+    B4 --> B5[["keep out the name (GDPR)"]]
     B5 --> B6[/"Transformed data"/]
 ```
 
@@ -71,10 +71,10 @@ The client wants a **full refresh** that is safe to re-run and leaves the previo
 
 ```mermaid
 flowchart LR
-    A["???***"] --> B1[["???"]]
-    B1 --> B2[["???"]]
-    B2 --> B3[["???"]]
-    B3 --> B4[["???"]]
-    B4 --> B5[["???"]]
+    A["Load***"] --> B1[["begin transaction"]]
+    B1 --> B2[["create table"]]
+    B2 --> B3[["insert rows (transformed)"]]
+    B3 --> B4[["validation"]]
+    B4 --> B5[["commit"]]
     B5 --> B6[/"customer_summary SQL table"/]
 ```

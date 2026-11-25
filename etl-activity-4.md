@@ -79,25 +79,31 @@ Its acceptance criteria (from Activity 2):
 
 Write at least one test for each category. Think about what can go wrong with a **file** that cannot go wrong with a database, such as a missing file, the wrong delimiter or encoding, renamed headers, or malformed rows.
 
-**Functional (level: ___)**
+**Functional (level: integration)**
 
-- [ ] Given ..., when ..., then ...
+- [ ] Given the customers.csv holds 5,200 rows, 5 columns, when the data is extracted, then results have exactly 5,200 rows
+- [ ] Given the same table, when the data is extracted, then the result has exactly the columns `customer_id`, `name`, `age`, `country` and `is_active`.
 
-**Performance (level: ___)**
+**Performance (level: integration)**
 
-- [ ] Given ..., when ..., then ...
+- [ ] Given the customers table hold 5,200 rows with 5 fields, when data is extracted, then extraction completes under 30 seconds
 
-**Data quality (level: ___)**
+**Data quality (level: integration)**
 
-- [ ] Given ..., when ..., then ...
+- [ ] Given a fixed sample of 20 `customer_id`s, when the extracted rows are compared with the same rows queried directly from the database, then every value matches.
+- [ ] Given the customers.csv hold 5,200 rows with 5 fields, when file is extracted, then no rows or columns are dropped
 
-**Error handling (level: ___)**
+**Error handling (level: integration)**
 
-- [ ] Given ..., when ..., then ...
+- [ ] Given the database is unreachable, when extraction runs, then a connection error is caught, logged, and the pipeline stops without output.
+- [ ] Given the query is invalid, when extraction runs, then a query error is caught, logged, and the pipeline stops without output.
+- [ ] Given the query exceeds its time limit, when extraction runs, then a timeout error is caught, logged, and the pipeline stops without output.
 
 **DoD checks**
 
-- [ ] Given ..., when ..., then ...
+- [ ] Given the SQL files, when they are linted with `sqlfluff`, then they pass.
+- [ ] Given the Python files, when they are linted with `flake8`, then they pass.
+- [ ] Given the full test suite runs, when coverage is measured, then the extraction module is at least 90% covered.
 
 ---
 

@@ -151,10 +151,10 @@ so that I can trust the spend figures.
 ```
 
 - [ ] Given extracted transactions in mixed date formats, when they are cleaned, then every `transaction_date` is in ISO 8601 (YYYY-MM-DD) format.
-- [ ] Given two or more rows share a `___`, when the data is cleaned, then only one remains and 0% duplicates are left.
+- [ ] Given two or more rows share a `transaction_id`, when the data is cleaned, then only one remains and 0% duplicates are left.
 - [ ] Given a row with a missing or non-numeric `amount`, or a missing `customer_id`, when the data is cleaned, then the row is removed and the reason is logged.
-- [ ] Given a row with a negative `amount`, when the data is cleaned, then the row is ___, because negative amounts are ___.
-- [ ] Given 10,500 extracted rows, when they are cleaned, then cleaning completes in under ___ seconds.
+- [ ] Given a row with a negative `amount`, when the data is cleaned, then the row is kept, because negative amounts are not within valid range.
+- [ ] Given 10,500 extracted rows, when they are cleaned, then cleaning completes in under 10.5 seconds.
 
 ### Story 4: Clean customers
 
@@ -166,7 +166,7 @@ so that I can trust the demographic fields.
 
 - [ ] Given two or more rows share a `customer_id`, when the data is cleaned, then the first occurrence is kept and the others are logged.
 - [ ] Given `is_active` values such as "Yes", "TRUE" or "1", when the data is cleaned, then every `is_active` value is a boolean (true or false).
-- [ ] Given an `age` that is missing or outside ___ to ___, when the data is cleaned, then `age` is set to ___ and the customer is kept.
+- [ ] Given an `age` that is missing or outside 18 to 100, when the data is cleaned, then `age` is set to null and the customer is kept.
 - [ ] Given a `country` with extra spaces or mixed case, when the data is cleaned, then it is trimmed and in title case; a missing country becomes "Unknown".
 - [ ] Given 5,200 extracted rows, when they are cleaned, then cleaning completes in under 5.2 seconds.
 
@@ -181,9 +181,9 @@ so that I can target high-value customers with rewards and understand who they a
 - [ ] Given cleaned transactions and customers, when they are joined on `customer_id`, then transactions with no matching customer are excluded and their count is logged.
 - [ ] Given the joined data, when it is filtered, then only customers with `is_active` = true remain.
 - [ ] Given the joined data, when spend is calculated, then `total_spent` equals the sum of `amount` for each `customer_id`, including refunds.
-- [ ] Given the joined data, when spend is calculated, then `avg_transaction_value` equals `total_spent` divided by `___`.
-- [ ] Given the enriched data, when high-value customers are selected, then only customers with `total_spent` greater than 500 remain, and a customer with exactly \$500.00 is ___.
-- [ ] Given the final dataset, when its columns are checked, then they are exactly the six `customer_summary` columns, and `___` is not present.
+- [ ] Given the joined data, when spend is calculated, then `avg_transaction_value` equals `total_spent` divided by `transaction_count`.
+- [ ] Given the enriched data, when high-value customers are selected, then only customers with `total_spent` greater than 500 remain, and a customer with exactly \$500.00 is excluded.
+- [ ] Given the final dataset, when its columns are checked, then they are exactly the six `customer_summary` columns, and `name` is not present.
 - [ ] Given a random sample of 20 customers, when their figures are recalculated by hand from source, then at least 99% match.
 
 ### Story 6: Store and refresh
@@ -195,7 +195,7 @@ so that I can repeat and update my analysis.
 ```
 
 - [ ] Given the transformed dataset, when it is loaded, then the row count in `customer_summary` equals the row count of the transformed dataset.
-- [ ] Given the transformed dataset, when it is loaded, then loading completes in under ___ seconds per 10,000 rows.
+- [ ] Given the transformed dataset, when it is loaded, then loading completes in under 5 seconds per 10,000 rows.
 - [ ] Given the full pipeline, when it runs end to end, then it completes in under 30 minutes.
 
 **Write these two criteria yourself**, in Given / When / Then form:
@@ -205,21 +205,21 @@ so that I can repeat and update my analysis.
 
 ```text
 Re-running:
-Given
-when
-then
+Given the pipeline has already run,
+when it is run again with the same sources,
+then `customer_summary` is identical and no `customer_id` appears more than once
 
 Failure:
-Given
-when
-then
+Given a load fails part-way
+when the failure is detected
+then the previous version of `customer_summary` remains and the failure is reported
 ```
 
 ---
 
 ### Debrief questions
 
-1. Why don't the acceptance criteria mention code review, linting or test coverage?
-2. Which criteria came from the client's answers rather than the targets in Part 1b? What would you have written without Activity 0?
-3. Why does Story 5 check that `name` is **not** present?
-4. Compare your two Story 6 criteria with another team's. Would both give a clear pass or fail?
+1. **Why don't the acceptance criteria mention code review, linting or test coverage?** they apply to every story, so they live in DoD, repeating them in each story's criteia hides what is genuinely specific to that story
+2. **Which criteria came from the client's answers rather than the targets in Part 1b? What would you have written without Activity 0?** the refun rule, the exactly $500 boundary, the duplicate definitions, age range, "Unkown" for country, excluding unmatched transactions, and dropping `name`, without activity 0, each would have been a guess, and several would change which customers appear in the output
+3. **Why does Story 5 check that `name` is **not** present?** data minimisation, the analysis does not need names, so the pipeline must not copy them intoo the target table, a test that checks for absence stops someone adding the column back later without a decision
+4. **Compare your two Story 6 criteria with another team's. Would both give a clear pass or fail?**
